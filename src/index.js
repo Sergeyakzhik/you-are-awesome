@@ -1,70 +1,59 @@
-const createEnumerableProperty = name => name;
+const createEnumerableProperty = (prop) => prop;
 
-const createNotEnumerableProperty = name1 => {
-    Object.defineProperty(Object.prototype, name1, {
+const createNotEnumerableProperty = prop => {
+    Object.defineProperty(Object.prototype, prop, {
         enumerable: false,
         set: function (value) {
-            Object.name1 = value;
+            Object.prop = value;
         },
         get: function () {
-            return Object.name1;
+            return Object.prop;
         }
     });
-    return name1;
+    return prop;
 };
 
-Function.prototype.valueOf = function () {
-    return this.i;
-};
-
-const createProtoMagicObject = () => {
-    return Function;
-};
+const createProtoMagicObject = () => Function;
 
 const incrementor = () => {
-    incrementor.i++;
+    incrementor.counter++;
     return incrementor;
 };
 
-incrementor.i = 0;
+incrementor.counter = 0;
+incrementor.valueOf = () => incrementor.counter;
 
 const asyncIncrementor = () => {
-    asyncIncrementor.i++;
+    asyncIncrementor.counter++;
     return asyncIncrementor;
 };
 
-asyncIncrementor.i = 0;
+asyncIncrementor.counter = 0;
+asyncIncrementor.valueOf = () => asyncIncrementor.counter;
 
 const createIncrementer = () => {
-    function* gen() {
-        var v = 0;
-        for(let j = 0; j < 3; j++) {
-            v++;
-            yield v;
-        }
-    }
-    return gen();
+    let count = 0;
+
+    return (function* generator() {
+        for(let i = count; i < 10000; i++)
+            yield i + 1;
+    })();
 };
 
-const returnBackInSecond = (x) => {
-    return new Promise(resolve => {
+const returnBackInSecond = (param) => {
+    return new Promise((resolve, reject) => {
         setTimeout(() => {
-            resolve(x);
-        }, 1000);
-    });
+            resolve(param);
+        }, 1100);
+    })
 };
-
-var number = 0;
 
 const getDeepPropertiesCount = (obj) => {
-    let ind = number;
-    for(let i in obj){
-        if (obj.hasOwnProperty(i)) {
-            number++;
-            getDeepPropertiesCount(obj[i]);
-        }
-    }
-    return number - ind;
+    let count = 0;
+    let properties = Object.getOwnPropertyNames(obj);
+    properties.forEach((i) =>
+        count += Object.keys(obj[i]).length ? getDeepPropertiesCount(obj[i]) : 0);
+        return count += properties.length
 };
 
 const createSerializedObject = () => {
@@ -73,9 +62,7 @@ const createSerializedObject = () => {
 
 const toBuffer = () => {};
 
-const sortByProto = (obj) => {
-    return obj.sort();
-};
+const sortByProto = (array) => array.sort((a, b) => a.__proto__ - b.__proto__);
 
 exports.createEnumerableProperty = createEnumerableProperty;
 exports.createNotEnumerableProperty = createNotEnumerableProperty;
@@ -87,3 +74,44 @@ exports.returnBackInSecond = returnBackInSecond;
 exports.getDeepPropertiesCount = getDeepPropertiesCount;
 exports.createSerializedObject = createSerializedObject;
 exports.sortByProto = sortByProto;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+const toBuffer = () => {};
+
+const sortByProto = (obj) => {
+    return obj.sort();
+};
+
+*/
